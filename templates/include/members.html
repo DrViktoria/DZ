@@ -1,0 +1,23 @@
+{% load static %}
+<div class="askdrob-answer">
+    <div class="row">
+
+      <div class="col-md-10">
+          <table width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                 <!--<td class="leftcol"><img src="{% static OfficesModel.picture %}" width="150" height="150" ></td>-->
+
+                 <td valign="top">
+                     <p> ФИО: {{ MembersModel.name}}<br>
+                         Должность: {{ MemberModel.position }}<br>
+                         Офис: {{ Membermodel.office }}<br>
+                         <!--<a href="{% url "office-detail" OfficesModel.pk %}">Сотрудники</a>-->
+                     </p>
+                     <!--<p style="text-align: center"><button type="submit" name="in">Вступить</button></p>-->
+                 </td>
+              </tr>
+          </table>
+      </div>
+    </div>
+</div>
+

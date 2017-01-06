@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> Новый сотрудник </h1>
+    <form method="POST" enctype="multipart/form-data" class="post-form" >{% csrf_token %}
+       <!-- <img src="{{ MembersModel.picture.url }}"> -->
+        {{ form.as_p }}
+        <button type="submit" class="save btn-default"> Сохранить</button>
+    </form>
+{% endblock %}

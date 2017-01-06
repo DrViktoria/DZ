@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+ {% block content %}
+               <div class="askdrob-main-question">
+                    <div class="row">
+                            <h3>Сотрудники офиса </h3>
+                    </div>
+               </div>
+      <div class="answers">
+                        {% for MembersModel in Members %}
+                            <div class="askdrob-answer">
+                                 <div class="row">
+                                      <div class="col-md-2">
+                                         <div class="askdrob-avatar-block">
+                                         </div>
+                                      </div>
+                                      <div class="col-md-10">
+                                         <p> №: {{ MembersModel.id }}<br>
+                                             ФИО: {{ MembersModel.name }}<br>
+                                             Должность: {{ MembersModel.position }}<br>
+                                         </p>
+                                      </div>
+                                 </div>
+                            </div>
+                        {% endfor %}
+       <!--<a href="{% url 'member_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span> </a>-->
+      </div>
+
+ {% endblock %}

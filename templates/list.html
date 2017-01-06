@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for OfficesModel in Offices %}
+        {% include "include/office.html" %}
+    {% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if offices.has_previous %}
+            <a href="?page={{ offices.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ offices.number }} of {{ offices.paginator.num_pages }}.
+        </span>
+
+        {% if offices.has_next %}
+            <a href="?page={{ offices.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
+

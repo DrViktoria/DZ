@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+    <div class="askdrob-main-question">
+                    <div class="row">
+                            <h3>Сотрудники</h3>
+                    </div>
+                </div>
+    <div class="answers">
+    {% for MembersModel in Members %}
+        {% include "include/members.html" %}
+    {% endfor %}
+
+    <a href="{% url 'member_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span> </a>
+
+   <!-- <a href="#openModal"> Добавить офис</a>
+    <div id = "openModal" class="modalDialog">
+        <div> <a href="#close" title="Закрыть" class="close"> X</a> </div>
+    </div>-->
+
+    </div>
+
+
+
+
+{% endblock %}
+
+
+
