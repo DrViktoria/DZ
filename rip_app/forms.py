@@ -109,3 +109,8 @@ class MemberForm(forms.ModelForm):
         model = MembersModel
         fields = ('name', 'position', 'office')
 
+
+class CreateForm(forms.Form):
+    named = forms.CharField(label='Название', required=False)
+    location = forms.CharField(label='Адрес', required=False)
+    picture = forms.ImageField(label='Логотип', required=False)

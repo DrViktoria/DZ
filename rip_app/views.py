@@ -1,13 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from rip_app.models import OfficesModel, MembersModel
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, ListView
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from rip_app.forms import LoginForm, SignupForm, OfficeForm, MemberForm
+from rip_app.forms import LoginForm, SignupForm, OfficeForm, MemberForm, CreateForm
 from django.contrib import auth
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-
+'''
 class Offices(TemplateView):
     template_name = 'index.html'
 
@@ -15,7 +15,17 @@ class Offices(TemplateView):
         Offices = OfficesModel.objects.all()
         context = dict(Offices=Offices)
         return context
+'''
 
+
+class OfficesListView(ListView):
+    template_name = 'include/office.html'
+    model = OfficesModel
+    context_object_name = 'Offices'
+    paginate_by = 10
+
+class Offices(OfficesListView):
+    template_name = 'index.html'
 
 
 class OfficeDetail(DetailView):
@@ -71,13 +81,16 @@ def logout(request):
 
 def office_new(request):
     if request.method == 'POST':
-        form = OfficeForm(request.POST, request.FILES)
+        form = CreateForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save(commit=True)
-            post.save()
+            office = OfficesModel()
+            office.named = request.POST.get('Название')
+            office.location = request.POST.get('Адрес')
+            office.picture = request.FILES.get('Логотип')
+            office.save()
             return redirect('Offices')
     else:
-        form = OfficeForm()
+        form = CreateForm()
     return render(request, 'newOffice.html', {'form': form})
 
 
@@ -110,6 +123,7 @@ def member_new(request):
 
 def sub(request):
     member = request.user.member
-    office = OfficesModel.objects.get(request.POST["office_id"])
+    office = OfficesModel.objects.get(id=request.POST["office_id"])
     office.members.add(member)
+    office.save()
     return redirect('/')
