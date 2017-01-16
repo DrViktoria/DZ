@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.contrib import admin
 from rip_app import views
-from  rip_app.views import Offices, OfficeDetail, sub
+from  rip_app.views import Offices, OfficeDetail, sub, OfficesListView
 
 
 urlpatterns = (
@@ -13,9 +13,7 @@ urlpatterns = (
     url(r'^office/(?P<pk>[0-9]+)/members/$', OfficeDetail.as_view(), name='office-detail'),
     url(r'^$', Offices.as_view(), name='Offices'),
     url(r'^office/new/$', views.office_new, name='office_new'),
-    url(r'^listing/$', views.listing, name='listing'),
     url(r'^members/new/$', views.member_new, name='member_new'),
     url(r'^sub/$', sub),
-
-
+    url(r'^office_list/(?P<page>\d+)/$',OfficesListView.as_view()),
 )
