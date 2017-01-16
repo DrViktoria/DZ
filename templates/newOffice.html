@@ -1,10 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1> Новый офис </h1>
-    <form method="POST" enctype="multipart/form-data" class="post-form" >{% csrf_token %}
+    <!-- <script type="text/javascript">
+		$("document").ready(function(){
+		    $('#modal').modal();
+		});
+	</script>
+<div id="modal" class="modal hide fade">
+    <div class="modal-header">-->
+
+        <h1> Новый офис </h1>
+
+    <!--<div class="modal-body">-->
+    <form name="NewOffice" method="POST" enctype="multipart/form-data" class="post-form"  onsubmit="return validate()">{% csrf_token %}
         <img src="{{ OfficesModel.picture.url }}">
+        <span style="color: red" id="id_named"></span>
+        <span style="color: red" id="id_location"></span>
+        <span style="color: red" id="id_picture"></span>
         {{ form.as_p }}
+
         <button type="submit" class="save btn-default"> Сохранить</button>
     </form>
+    <script src="/static/js/new_office.js"></script>
+
 {% endblock %}
