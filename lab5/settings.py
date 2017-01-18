@@ -122,11 +122,20 @@ USE_TZ = True
 
 # -*- coding: utf-8 -*-
 
-STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
-MEDIA_ROOT = os.path.join(BASE_DIR, '/static/images/')
+
+_PATH = os.path.abspath(os.path.dirname(__file__))
+
+MEDIA_ROOT = r'C:/Users/Виктория/PycharmProjects/lab5/static/'
 MEDIA_URL = '/images/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     # location of your application, should not be public web accessible
     r'C:\Users\Виктория\PycharmProjects\lab5\static'
 ]
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
