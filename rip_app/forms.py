@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-
 from django import forms
 from .models import OfficesModel, MembersModel
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
+from django.utils.translation import ugettext_lazy as _
 
 
 class LoginForm(forms.Form):
@@ -72,12 +72,12 @@ class SignupForm(forms.Form):
         except User.DoesNotExist:
             return username
 
-    def clean_password(self):
+    def clean(self):
         p1 = self.cleaned_data.get('password', '')
         p2 = self.cleaned_data.get('password_check','')
 
         if p1 != p2:
-            raise forms.ValidationError(u'Введённые пароли не существуют')
+            raise forms.ValidationError(u'Введённые пароли не совпадают')
 
     def save(self):
         data = self.cleaned_data
@@ -89,9 +89,16 @@ class SignupForm(forms.Form):
         u.email = data.get('email')
         u.first_name = data.get('first_name')
         u.last_name = data.get('last_name')
+
         u.is_active = True
         u.is_superuser = False
         u.save()
+
+        test = MembersModel()
+        test.user_id = u.id
+        test.l_name = u.last_name
+        test.f_name = u.first_name
+        test.save()
 
         return authenticate(username=u.username, password=password)
 
@@ -107,10 +114,21 @@ class MemberForm(forms.ModelForm):
 
     class Meta:
         model = MembersModel
-        fields = ('name', 'position', 'office')
+        fields = ('l_name', 'f_name','position', 'office')
 
 
 class CreateForm(forms.Form):
     named = forms.CharField(label='Название', required=False)
     location = forms.CharField(label='Адрес', required=False)
     picture = forms.ImageField(label='Логотип', required=False)
+
+
+class Create(forms.ModelForm):
+    class Meta:
+        model = OfficesModel
+        fields = ['named', 'location', 'picture']
+        labels = {
+            'named': _('Название'),
+            'location': _('Адрес'),
+            'picture': _('Логотип')
+        }

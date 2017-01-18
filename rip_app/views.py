@@ -1,21 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect, render_to_response
+from django.shortcuts import render, get_object_or_404, redirect, render_to_response, reverse
 from rip_app.models import OfficesModel, MembersModel
 from django.views.generic import TemplateView, DetailView, ListView
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from rip_app.forms import LoginForm, SignupForm, OfficeForm, MemberForm, CreateForm
+from rip_app.forms import LoginForm, SignupForm, OfficeForm, MemberForm, CreateForm, Create
 from django.contrib import auth
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-'''
-class Offices(TemplateView):
-    template_name = 'index.html'
-
-    def get_context_data(self, **kwargs):
-        Offices = OfficesModel.objects.all()
-        context = dict(Offices=Offices)
-        return context
-'''
 
 
 class OfficesListView(ListView):
@@ -24,19 +13,25 @@ class OfficesListView(ListView):
     context_object_name = 'Offices'
     paginate_by = 10
 
+
 class Offices(OfficesListView):
     template_name = 'index.html'
 
 
-class OfficeDetail(DetailView):
-    template_name = 'members.html'
+class OneOffice(DetailView):
+    template_name = 'include/one_office.html'
     model = OfficesModel
+    context_object_name = 'Offices'
 
-    def get_context_data(self, **kwargs):
-        context = super(OfficeDetail, self).get_context_data()
-        Members = context["object"].members.all()
-        context = dict(Members=Members)
-        return context
+    def get_object(self):
+        object = super(OneOffice, self).get_object()
+        if not self.request.user.is_authenticated():
+            raise Http404
+        return object
+
+    def get_members(request, office_id):
+        members = get_object_or_404(MembersModel, pk=office_id)
+        return render(request,'/office/' + str(office_id)+'/', {'members': members})
 
 
 def index(request):
@@ -81,32 +76,14 @@ def logout(request):
 
 def office_new(request):
     if request.method == 'POST':
-        form = CreateForm(request.POST, request.FILES)
+        form = Create(request.POST, request.FILES)
         if form.is_valid():
-            office = OfficesModel()
-            office.named = request.POST.get('Название')
-            office.location = request.POST.get('Адрес')
-            office.picture = request.FILES.get('Логотип')
-            office.save()
-            return redirect('Offices')
+            office = form.save()
+            return HttpResponseRedirect('/office/' + str(office.pk)+'/')
+
     else:
-        form = CreateForm()
+        form = Create()
     return render(request, 'newOffice.html', {'form': form})
-
-
-def listing(request):
-    offices_list = OfficesModel.objects.all()
-    paginator = Paginator(offices_list, 5)
-
-    page = request.GET.get('page')
-    try:
-        offices = paginator.page(page)
-    except PageNotAnInteger:
-        offices = paginator.page(1)
-    except EmptyPage:
-        offices = paginator.page(paginator.num_pages)
-
-    return render_to_response('index.html', {"offices": offices})
 
 
 def member_new(request):
@@ -123,7 +100,7 @@ def member_new(request):
 
 def sub(request):
     member = request.user.member
-    office = OfficesModel.objects.get(id=request.POST["office_id"])
+    office = OfficesModel.objects.get(pk=request.POST.get("id"))
     office.members.add(member)
-    office.save()
-    return redirect('/')
+    return redirect('/office/' + str(office.pk)+'/')
+

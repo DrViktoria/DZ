@@ -13,10 +13,9 @@ admin.site.register(models.OfficesModel, OfficeAdmin)
 # Register your models here.
 
 
-class Members(admin.ModelAdmin):
-    list_display = ('name', 'position')
-    search_fields = ['name']
+class Member(admin.ModelAdmin):
+    list_display = ('l_name', 'f_name', 'position', 'user_id')
+    search_fields = ['l_name']
     list_filter = ['position']
 
-
-admin.site.register(models.MembersModel, Members)
+admin.site.register(models.MembersModel, Member)
